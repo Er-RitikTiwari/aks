@@ -8,31 +8,46 @@ jobs:
               uses: actions/checkout@v4
             - name: Azure login
               run: az login --tenant add67cd2-c8b2-416c-b171-b61b22be92f4
-            # - name: Check if Resource Group Exists
-            #   run: |
-            #     RG_EXISTS=$(az group exists --name trial-aks)
-            #     if [ "$RG_EXISTS" == "false" ]; then
-            #       echo "Creating resource group..."
-            #       az group create --name trial-aks --location australiacentral
-            #     else
-            #       echo "Resource group already exist"
-            #     fi
-
+            - name: Check If Resource Group Exists
+              id: check-rg
+              run: |
+                if az group show --name trial-aks &>/dev/null; then
+                  echo "EXISTS=true" >> $GITHUB_ENV
+                else
+                  echo "EXISTS=false" >> $GITHUB_ENV
+                fi
+      
+            - name: Create Resource Group (If Missing)
+              if: env.EXISTS == 'false'
+              run: az group create --name trial-aks --location australiacentral
             - name: terraform setup
               uses: hashicorp/setup-terraform@v3
             - name: terraform intialize
               run: cd module_practice && terraform init
             - name: terraform plan
               run: cd module_practice && terraform plan
-            - name: terraform apply -auto-approve
-              run: cd module_practice && terraform apply -auto-approve
-            - name: connect cluster
-              run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
+            - name: Check If AKS Cluster Exists
+              id: check-cluster
+              run: |
+                if az aks show --resource-group trial-aks --name ritik-cluster &>/dev/null; then
+                  echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+                else
+                  echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+                fi
+            - name: Terraform Apply (Only If Needed)
+              if: env.CLUSTER_EXISTS == 'false'
+              run: terraform apply -auto-approve
+        
+            # - name: connect cluster
+            #   run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
             - name: creating a namespace
-              run: kubectl get namespace notes-space || kubectl create namespace notes-space
+              run: |
+                if ! kubectl get namespace notes-space &>/dev/null; then
+                  kubectl create namespace notes-space
+                fi
             - name: running deploy file
               run: kubectl apply -f deployment.yml
             - name: running the service file
               run: kubectl apply -f service.yml
             - name: getting the public ip 
-              run: kubectl get svc -ns notes-space
+              run: echo " public ip $(kubectl get svc -n notes-space)"
