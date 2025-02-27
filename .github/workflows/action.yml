@@ -15,5 +15,5 @@ jobs:
               run: cd module_practice && terraform init
             - name: terraform plan
               run: cd module_practice && terraform plan
-            - name: terraform apply --auto-approve
+            - name: terraform apply -auto-approve
               run: cd module_practice && terraform apply
