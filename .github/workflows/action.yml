@@ -16,4 +16,4 @@ jobs:
             - name: terraform plan
               run: cd module_practice && terraform plan
             - name: terraform apply -auto-approve
-              run: cd module_practice && terraform apply
+              run: cd module_practice && terraform apply -auto-approve
