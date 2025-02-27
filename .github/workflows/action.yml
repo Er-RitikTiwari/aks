@@ -1,0 +1,21 @@
+name: aks_cluster
+on: push
+jobs:
+    cluster:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get code
+              uses: actions/checkout@v4
+            - name: Azure login
+              uses: azure/login@v2
+              with:
+                tenant-id: ${{ secrets.add67cd2-c8b2-416c-b171-b61b22be92f4 }}
+
+            - name: terraform setup
+              uses: hashicorp/setup-terraform@v3
+            - name: terraform intialize
+              run: terraform init
+            - name: terraform plan
+              run: terraform plan
+            - name: terraform apply
+              run:  terraform apply
