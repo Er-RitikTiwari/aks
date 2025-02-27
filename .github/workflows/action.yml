@@ -25,3 +25,4 @@ jobs:
               run: kubectl apply -f deployment.yml
             - name: running the service file
               run: kubectl apply -f service.yml
+            #   add
