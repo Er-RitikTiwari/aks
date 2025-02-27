@@ -62,8 +62,8 @@ jobs:
               run: cd module_practice && terraform apply -auto-approve
 
         
-            # - name: connect cluster
-            #   run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
+            - name: connect cluster
+              run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
             - name: creating a namespace
               run: |
                 if ! kubectl get namespace notes-space &>/dev/null; then
