@@ -26,17 +26,41 @@ jobs:
               run: cd module_practice && terraform init
             - name: terraform plan
               run: cd module_practice && terraform plan
+            # - name: Check If AKS Cluster Exists
+            #   id: check-cluster
+            #   run: |
+            #     if az aks show --resource-group trial-aks --name ritik-cluster &>/dev/null; then
+            #       echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+            #     else
+            #       echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+            #     fi
+            # - name: Terraform Apply (Only If Needed)
+            #   if: |
+            #      env.CLUSTER_EXISTS == 'false'
+            #      env.RG_EXISTS == 'false'
+            #   run: cd module_practice && terraform apply -auto-approve
             - name: Check If AKS Cluster Exists
               id: check-cluster
               run: |
-                if az aks show --resource-group trial-aks --name ritik-cluster &>/dev/null; then
-                  echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
-                else
-                  echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
-                fi
+                 if az aks show --resource-group trial-aks --name ritik-cluster &>/dev/null; then
+                   echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
+                 else
+                   echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
+                 fi
+ 
+            # - name: Check If Resource Group Exists
+            #   id: check-rg
+            #   run: |
+            #      if az group show --name trial-aks &>/dev/null; then
+            #       echo "RG_EXISTS=true" >> $GITHUB_ENV
+            #      else
+            #       echo "RG_EXISTS=false" >> $GITHUB_ENV
+            #      fi
+
             - name: Terraform Apply (Only If Needed)
-              if: env.CLUSTER_EXISTS == 'false'
+              if: env.RG_EXISTS == 'false'  # ✅ Runs Terraform only if the resource group does NOT exist
               run: cd module_practice && terraform apply -auto-approve
+
         
             # - name: connect cluster
             #   run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
