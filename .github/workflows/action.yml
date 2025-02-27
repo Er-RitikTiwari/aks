@@ -7,9 +7,7 @@ jobs:
             - name: Get code
               uses: actions/checkout@v4
             - name: Azure login
-              uses: azure/login@v2
-              with:
-                tenant-id: ${{ secrets.add67cd2-c8b2-416c-b171-b61b22be92f4 }}
+              run: az login add67cd2-c8b2-416c-b171-b61b22be92f4
 
             - name: terraform setup
               uses: hashicorp/setup-terraform@v3
