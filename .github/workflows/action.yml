@@ -17,3 +17,11 @@ jobs:
               run: cd module_practice && terraform plan
             - name: terraform apply -auto-approve
               run: cd module_practice && terraform apply -auto-approve
+            - name: connect cluster
+              run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
+            - name: creating a namespace
+              run: kubectl create namespace notes-space
+            - name: running deploy file
+              run: kubectl apply -f deployment.yml
+            - name: running the service file
+              run: kubectl apply -f service.yml
