@@ -10,13 +10,13 @@ jobs:
               run: az login --tenant add67cd2-c8b2-416c-b171-b61b22be92f4
             - name: Check if Resource Group Exists
               run: |
-                   RG_EXISTS=$(az group exists --name trial-aks)
-                   if [ "$RG_EXISTS" == "false" ]; then
-                   echo "Creating resource group..."
-                   az group create --name trial-aks --location australiacentral
-                   else
-                   echo "Resource group already exists."
-                   fi
+                RG_EXISTS=$(az group exists --name trial-aks)
+                if [ "$RG_EXISTS" == "false" ]; then
+                  echo "Creating resource group..."
+                  az group create --name trial-aks --location australiacentral
+                else
+                  echo "Resource group already exist"
+                fi
 
             - name: terraform setup
               uses: hashicorp/setup-terraform@v3
