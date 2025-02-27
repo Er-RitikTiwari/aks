@@ -36,7 +36,7 @@ jobs:
                 fi
             - name: Terraform Apply (Only If Needed)
               if: env.CLUSTER_EXISTS == 'false'
-              run: terraform apply -auto-approve
+              run: cd module_practice && terraform apply -auto-approve
         
             # - name: connect cluster
             #   run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
