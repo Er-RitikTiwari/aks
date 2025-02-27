@@ -7,7 +7,7 @@ jobs:
             - name: Get code
               uses: actions/checkout@v4
             - name: Azure login
-              run: az login add67cd2-c8b2-416c-b171-b61b22be92f4
+              run: az login --tenant add67cd2-c8b2-416c-b171-b61b22be92f4
 
             - name: terraform setup
               uses: hashicorp/setup-terraform@v3
