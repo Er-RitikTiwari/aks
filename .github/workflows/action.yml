@@ -16,11 +16,11 @@ jobs:
                 else
                   echo "EXISTS=false" >> $GITHUB_ENV
                 fi
-      
+            - name: setup terraform
+              uses: hashicorp/setup-terraform@v3
             - name: Create Resource Group (If Missing)
-              if: env.EXISTS == 'false'
+              if: ${{ env.EXISTS == 'false' }}
               run: |
-                 hashicorp/setup-terraform@v3
                  cd module_practice && terraform init
                  cd module_practice && terraform plan
                  cd module_practice && terraform apply
