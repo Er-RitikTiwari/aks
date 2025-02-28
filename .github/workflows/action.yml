@@ -21,10 +21,10 @@ jobs:
             - name: Create Resource Group (If Missing)
               if: ${{ env.EXISTS == 'false' }}
               run: |
-                 cd module_practice && terraform init
-                 cd module_practice && terraform plan
-                 cd module_practice && terraform apply
-            # - name: terraform setup
+                 cd module_practice 
+                 terraform init
+                 terraform plan
+                 terraform apply
             #   uses: hashicorp/setup-terraform@v3
             # - name: terraform intialize
             #   run: cd module_practice && terraform init
