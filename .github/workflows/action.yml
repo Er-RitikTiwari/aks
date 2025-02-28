@@ -19,13 +19,17 @@ jobs:
       
             - name: Create Resource Group (If Missing)
               if: env.EXISTS == 'false'
-              run: az group create --name trial-aks --location australiacentral
-            - name: terraform setup
-              uses: hashicorp/setup-terraform@v3
-            - name: terraform intialize
-              run: cd module_practice && terraform init
-            - name: terraform plan
-              run: cd module_practice && terraform plan
+              run: |
+                 hashicorp/setup-terraform@v3
+                 cd module_practice && terraform init
+                 cd module_practice && terraform plan
+                 cd module_practice && terraform apply
+            # - name: terraform setup
+            #   uses: hashicorp/setup-terraform@v3
+            # - name: terraform intialize
+            #   run: cd module_practice && terraform init
+            # - name: terraform plan
+            #   run: cd module_practice && terraform plan
             # - name: Check If AKS Cluster Exists
             #   id: check-cluster
             #   run: |
@@ -57,9 +61,9 @@ jobs:
             #       echo "RG_EXISTS=false" >> $GITHUB_ENV
             #      fi
 
-            - name: Terraform Apply (Only If Needed)
-              if: env.RG_EXISTS == 'false'  # ✅ Runs Terraform only if the resource group does NOT exist
-              run: cd module_practice && terraform apply -auto-approve
+            # - name: Terraform Apply (Only If Needed)
+            #   if: env.RG_EXISTS == 'false'  
+            #   run: cd module_practice && terraform apply -auto-approve
 
         
             - name: connect cluster
