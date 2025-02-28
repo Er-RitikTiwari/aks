@@ -24,7 +24,7 @@ jobs:
                  cd module_practice 
                  terraform init
                  terraform plan
-                 terraform apply
+                 terraform apply -auto-approve
             #   uses: hashicorp/setup-terraform@v3
             # - name: terraform intialize
             #   run: cd module_practice && terraform init
