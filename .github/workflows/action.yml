@@ -6,76 +6,15 @@ jobs:
         steps:
             - name: Get code
               uses: actions/checkout@v4
+
             - name: Azure login
               run: az login --tenant add67cd2-c8b2-416c-b171-b61b22be92f4
-            - name: Check If Resource Group Exists
-              id: check-rg
-              run: |
-                if az group show --name trial-aks &>/dev/null; then
-                  echo "EXISTS=true" >> $GITHUB_ENV
-                else
-                  echo "EXISTS=false" >> $GITHUB_ENV
-                fi
-            - name: setup terraform
-              uses: hashicorp/setup-terraform@v3
-            - name: Create Resource Group (If Missing)
-              if: ${{ env.EXISTS == 'false' }}
-              run: |
-                 cd module_practice 
-                 terraform init
-                 terraform plan
-                 terraform apply -auto-approve
-            #   uses: hashicorp/setup-terraform@v3
-            # - name: terraform intialize
-            #   run: cd module_practice && terraform init
-            # - name: terraform plan
-            #   run: cd module_practice && terraform plan
-            # - name: Check If AKS Cluster Exists
-            #   id: check-cluster
-            #   run: |
-            #     if az aks show --resource-group trial-aks --name ritik-cluster &>/dev/null; then
-            #       echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
-            #     else
-            #       echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
-            #     fi
-            # - name: Terraform Apply (Only If Needed)
-            #   if: |
-            #      env.CLUSTER_EXISTS == 'false'
-            #      env.RG_EXISTS == 'false'
-            #   run: cd module_practice && terraform apply -auto-approve
-            - name: Check If AKS Cluster Exists
-              id: check-cluster
-              run: |
-                 if az aks show --resource-group trial-aks --name ritik-cluster &>/dev/null; then
-                   echo "CLUSTER_EXISTS=true" >> $GITHUB_ENV
-                 else
-                   echo "CLUSTER_EXISTS=false" >> $GITHUB_ENV
-                 fi
- 
-            # - name: Check If Resource Group Exists
-            #   id: check-rg
-            #   run: |
-            #      if az group show --name trial-aks &>/dev/null; then
-            #       echo "RG_EXISTS=true" >> $GITHUB_ENV
-            #      else
-            #       echo "RG_EXISTS=false" >> $GITHUB_ENV
-            #      fi
 
-            # - name: Terraform Apply (Only If Needed)
-            #   if: env.RG_EXISTS == 'false'  
-            #   run: cd module_practice && terraform apply -auto-approve
-
-        
             - name: connect cluster
               run: az aks get-credentials --resource-group trial-aks --name ritik-cluster --overwrite-existing
-            - name: creating a namespace
-              run: |
-                if ! kubectl get namespace notes-space &>/dev/null; then
-                  kubectl create namespace notes-space
-                fi
+
             - name: running deploy file
-              run: kubectl apply -f deployment.yml
-            - name: running the service file
-              run: kubectl apply -f service.yml
-            - name: getting the public ip 
+              run: kubectl apply -f k8s.yml
+
+            - name: getting the external ip 
               run: echo " public ip $(kubectl get svc -n notes-space)"
