@@ -18,3 +18,4 @@ jobs:
 
             - name: getting the external ip 
               run: echo " public ip $(kubectl get svc -n notes-space)"
+              
